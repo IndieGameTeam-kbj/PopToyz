@@ -5,8 +5,8 @@ public class TargetPool : MonoBehaviour
 {
     [SerializeField] private Target[] _targetPrefabs;
 
-    private Dictionary<Target, Queue<Target>> _pools = new Dictionary<Target, Queue<Target>>();
-    private Dictionary<Target, Target> _targetOwners = new Dictionary<Target, Target>();
+    private Dictionary<Target, Queue<Target>> _pools = new();
+    private Dictionary<Target, Target> _targetOwners = new();
 
     public Target Get()
     {
@@ -23,26 +23,24 @@ public class TargetPool : MonoBehaviour
         if (pool.Count > 0)
         {
             target = pool.Dequeue();
-            target.gameObject.SetActive(true);
         }
         else
         {
             target = Instantiate(prefab, transform);
+            target.Init();
             _targetOwners.Add(target, prefab);
         }
 
+        target.gameObject.SetActive(false);
         return target;
     }
 
     public void Return(Target target)
     {
-        if (!_targetOwners.TryGetValue(target, out Target prefab))
-        {
-            return;
-        }
+        if (!_targetOwners.TryGetValue(target, out Target prefab)) return;
 
+        target.ResetPhysics();
         target.gameObject.SetActive(false);
-
         _pools[prefab].Enqueue(target);
     }
 
