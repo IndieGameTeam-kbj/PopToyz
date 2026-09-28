@@ -1,16 +1,27 @@
 using UnityEngine;
 
+public enum TargetState
+{
+    Idle,
+    Hit,
+}
+
 public class Target : MonoBehaviour
 {
     private Rigidbody _rigidbody;
+    private TargetState _state;
+
+    public TargetState State => _state;
 
     public void Init()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _state = TargetState.Idle;
     }
 
     public void Launch(Vector3 position, Vector3 velocity)
     {
+        _state = TargetState.Idle;
         transform.SetPositionAndRotation(position, Random.rotation);
 
         _rigidbody.linearVelocity = Vector3.zero;
