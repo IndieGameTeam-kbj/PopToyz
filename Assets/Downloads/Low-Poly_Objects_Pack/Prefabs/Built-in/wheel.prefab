@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8130329426182220330}
   - component: {fileID: 6096925879814041828}
-  m_Layer: 0
+  - component: {fileID: 7853016308837541104}
+  m_Layer: 6
   m_Name: wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,6 +42,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 938555729748598823}
   m_Mesh: {fileID: -6296406880743504499, guid: e1487291aad796342832877ee6847595, type: 3}
+--- !u!114 &7853016308837541104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938555729748598823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6063889f933c2f7429b1e128111d0ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Target
+  _rigidbody: {fileID: 7701273318366522679}
 --- !u!1 &4426570695372379493
 GameObject:
   m_ObjectHideFlags: 0
@@ -54,7 +68,7 @@ GameObject:
   - component: {fileID: 1124467863544614219}
   - component: {fileID: 7701273318366522679}
   - component: {fileID: 8349822846621715841}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,6 +115,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -122,9 +141,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!54 &7701273318366522679
 Rigidbody:
@@ -133,10 +154,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4426570695372379493}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0.1
-  m_AngularDrag: 0.1
+  m_LinearDamping: 0.1
+  m_AngularDamping: 0.1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}

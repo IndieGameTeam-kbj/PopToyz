@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6030694967804824466}
   - component: {fileID: 2970531133323840663}
   - component: {fileID: 2144030794503117332}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: backpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,6 +60,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -81,9 +86,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!54 &2970531133323840663
 Rigidbody:
@@ -92,10 +99,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3848391485103574514}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0.1
-  m_AngularDrag: 0.1
+  m_LinearDamping: 0.1
+  m_AngularDamping: 0.1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -144,7 +151,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5906528325965869878}
   - component: {fileID: 2452740660262992565}
-  m_Layer: 0
+  - component: {fileID: 2374426270734877067}
+  m_Layer: 6
   m_Name: backpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,3 +183,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7184543449208884085}
   m_Mesh: {fileID: -2587485212497171513, guid: ea81727cdfbd38d4b82a8916d5896caa, type: 3}
+--- !u!114 &2374426270734877067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184543449208884085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6063889f933c2f7429b1e128111d0ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Target
+  _rigidbody: {fileID: 2970531133323840663}
