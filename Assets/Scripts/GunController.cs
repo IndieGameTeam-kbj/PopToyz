@@ -4,20 +4,23 @@ using UnityEngine.InputSystem;
 
 public class GunController : MonoBehaviour
 {
-    [SerializeField] private int _bulletsInMagazine = 6;
+    [SerializeField] private int _CorkMagazineSize = 6;
     [SerializeField] private float _fireRate = 0.5f;
     [SerializeField] private float _reloadTime = 2f;
 
     [SerializeField] private LayerMask _hitLayer;
     [SerializeField] private CorkPool _corkPool;
 
-    private int _currentBullets;
+    [SerializeField] private CorkUI _corkUI;
+
+    private int _currentCorkCount;
     private bool _isReloading;
     private float _nextFireTime;
 
     private void Start()
     {
-        _currentBullets = _bulletsInMagazine;
+        _currentCorkCount = _CorkMagazineSize;
+        _corkUI.SetCorkCount(_currentCorkCount);
     }
 
     private void Update()
@@ -40,15 +43,16 @@ public class GunController : MonoBehaviour
         if (Time.time < _nextFireTime)
             return;
 
-        if (_currentBullets <= 0)
+        if (_currentCorkCount <= 0)
             return;
 
-        _currentBullets--;
+        _currentCorkCount--;
+        _corkUI.SetCorkCount(_currentCorkCount);
         _nextFireTime = Time.time + _fireRate;
 
         Fire(screenPosition);
 
-        if (_currentBullets <= 0)
+        if (_currentCorkCount <= 0)
         {
             StartCoroutine(Reload());
         }
@@ -86,7 +90,8 @@ public class GunController : MonoBehaviour
 
         yield return new WaitForSeconds(_reloadTime);
 
-        _currentBullets = _bulletsInMagazine;
+        _currentCorkCount = _CorkMagazineSize;
+        _corkUI.SetCorkCount(_currentCorkCount);
         _isReloading = false;
     }
 }
