@@ -24,6 +24,21 @@ public class TargetSpawner : MonoBehaviour
         if (_camera == null) _camera = Camera.main;
     }
 
+    private void Start()
+    {
+        GameManager.GameRestarted += Reset;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.GameRestarted -= Reset;
+    }
+
+    public void Reset()
+    {
+        _time = 0.0f;
+    }
+
     public void Spawn()
     {
         Target target = _targetPool.Get();
@@ -83,6 +98,9 @@ public class TargetSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.State != GameState.Playing)
+            return;
+
         _time += Time.deltaTime;
 
         if (_time >= _spawnInterval)

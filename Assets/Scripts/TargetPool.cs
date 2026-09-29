@@ -8,6 +8,16 @@ public class TargetPool : MonoBehaviour
     private Dictionary<Target, Queue<Target>> _pools = new();
     private Dictionary<Target, Target> _targetOwners = new();
 
+    private void Start()
+    {
+        GameManager.GameRestarted += Reset;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.GameRestarted -= Reset;
+    }
+
     public Target Get()
     {
         Target prefab = _targetPrefabs[Random.Range(0, _targetPrefabs.Length)];
@@ -42,6 +52,17 @@ public class TargetPool : MonoBehaviour
         target.ResetPhysics();
         target.gameObject.SetActive(false);
         _pools[prefab].Enqueue(target);
+    }
+
+    public void Reset()
+    {
+        foreach (Target target in _targetOwners.Keys)
+        {
+            if (target.gameObject.activeSelf)
+            {
+                Return(target);
+            }
+        }
     }
 
 }

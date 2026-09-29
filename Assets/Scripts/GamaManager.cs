@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public enum GameState
 {
@@ -10,14 +11,21 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
+    public static event Action GameRestarted;
     public static GameManager Instance { get; private set; }
-
     public GameState State { get; private set; }
 
     private void Awake()
     {
         Instance = this;
         State = GameState.MainMenu;
+    }
+
+    private void Start()
+    {
+        Time.timeScale = 1f;
+        ViewManager.Instance.ShowMainMenu();
+        PlayerController.GameOverAnimationCompleted += GameOver;
     }
 
     public void StartGame()
@@ -43,11 +51,20 @@ public class GameManager : MonoBehaviour
 
         ViewManager.Instance.HidePause();
     }
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+
+        GameRestarted?.Invoke();
+
+        State = GameState.Playing;
+        ViewManager.Instance.ShowGame();
+    }
 
     public void GameOver()
     {
         State = GameState.GameOver;
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
 
         ViewManager.Instance.ShowGameOver();
     }

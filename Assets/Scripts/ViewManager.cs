@@ -5,7 +5,7 @@ public class ViewManager : MonoBehaviour
 {
     public static ViewManager Instance { get; private set; }
     [SerializeField] private GameObject _mainMenu;
-    //[SerializeField] private GameObject _gameUI;
+    [SerializeField] private GameObject _gameUI;
     [SerializeField] private GameObject _pausePopup;
     [SerializeField] private GameObject _gameOverPopup;
 
@@ -14,15 +14,11 @@ public class ViewManager : MonoBehaviour
     {
         Instance = this;
     }
-    private void Start()
-    {
-        ShowMainMenu();
-    }
 
     public void ShowMainMenu()
     {
         _mainMenu.SetActive(true);
-       // _gameUI.SetActive(false);
+        _gameUI.SetActive(false);
         _pausePopup.SetActive(false);
         _gameOverPopup.SetActive(false);
 
@@ -32,7 +28,7 @@ public class ViewManager : MonoBehaviour
     public void ShowGame()
     {
         _mainMenu.SetActive(false);
-       // _gameUI.SetActive(true);
+        _gameUI.SetActive(true);
         _pausePopup.SetActive(false);
         _gameOverPopup.SetActive(false);
     }

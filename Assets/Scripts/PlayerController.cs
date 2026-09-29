@@ -58,7 +58,6 @@ public class PlayerController : MonoBehaviour
             Transform target = _corkImages[i].transform;
             target.DOKill();
             target.localScale = Vector3.one;
-            target.localPosition = _corkImages[i].rectTransform.anchoredPosition;
             target.localRotation = Quaternion.identity;
             _corkImages[i].gameObject.SetActive(true);
         }
@@ -250,11 +249,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         ReturnFloor.TargetMissed += LoseLife;
+        GameManager.GameRestarted += Reset;
     }
 
     private void OnDisable()
     {
         ReturnFloor.TargetMissed -= LoseLife;
+        GameManager.GameRestarted -= Reset;
     }
 
 }
