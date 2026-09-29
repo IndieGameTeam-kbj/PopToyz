@@ -9,6 +9,7 @@ public class ViewManager : MonoBehaviour
     [SerializeField] private GameObject _pausePopup;
     [SerializeField] private GameObject _gameOverPopup;
 
+    [SerializeField] private LogoAnimationController _logoAnimation;
     private void Awake()
     {
         Instance = this;
@@ -24,6 +25,8 @@ public class ViewManager : MonoBehaviour
        // _gameUI.SetActive(false);
         _pausePopup.SetActive(false);
         _gameOverPopup.SetActive(false);
+
+        _logoAnimation.Play();
     }
 
     public void ShowGame()

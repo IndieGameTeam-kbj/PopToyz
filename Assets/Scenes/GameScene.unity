@@ -736,7 +736,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &661171911
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1089,6 +1089,7 @@ GameObject:
   - component: {fileID: 795703847}
   - component: {fileID: 795703849}
   - component: {fileID: 795703848}
+  - component: {fileID: 795703850}
   m_Layer: 5
   m_Name: Logo
   m_TagString: Untagged
@@ -1153,6 +1154,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 795703846}
   m_CullTransparentMesh: 1
+--- !u!114 &795703850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795703846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409e0ab624213d1488f3cd2f1673427b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LogoAnimationController
+  _logo: {fileID: 795703847}
 --- !u!1 &1042628091
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,6 +1620,7 @@ MonoBehaviour:
   _mainMenu: {fileID: 1324130526}
   _pausePopup: {fileID: 661171910}
   _gameOverPopup: {fileID: 1299419938}
+  _logoAnimation: {fileID: 795703850}
 --- !u!4 &1278989085
 Transform:
   m_ObjectHideFlags: 0
@@ -1752,7 +1767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1324130527
 RectTransform:
   m_ObjectHideFlags: 0
