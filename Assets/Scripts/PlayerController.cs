@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
@@ -12,6 +13,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _hitLayer;
     [SerializeField] private CorkPool _corkPool;
     [SerializeField] private Image[] _corkImages;
+
+    [SerializeField] private Image _reloadImage;
+    [SerializeField] private float _reloadInterval = 0.2f;
 
     private int _life;
     private int _currentCorkCount;
@@ -25,21 +29,17 @@ public class PlayerController : MonoBehaviour
     {
         _life = _lifeHearts.Length;
         _currentCorkCount = _CorkMagazineSize;
-
         for (int i = 0; i < _corkImages.Length; i++)
         {
             _corkImages[i].gameObject.SetActive(true);
             _corkImages[i].transform.localScale = Vector3.one;
         }
+        _reloadImage.gameObject.SetActive(false);
+        _reloadImage.fillAmount = 0.0f;
     }
 
     public void Reset()
     {
-        if (_reloadCoroutine != null)
-        {
-            StopCoroutine(_reloadCoroutine);
-            _reloadCoroutine = null;
-        }
 
         for (int i = 0; i < _lifeHearts.Length; i++)
         {
@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
             target.localRotation = Quaternion.identity;
             _lifeHearts[i].gameObject.SetActive(true);
         }
-
         for (int i = 0; i < _corkImages.Length; i++)
         {
             Transform target = _corkImages[i].transform;
@@ -58,10 +57,17 @@ public class PlayerController : MonoBehaviour
             target.localPosition = _corkImages[i].rectTransform.anchoredPosition;
             _corkImages[i].gameObject.SetActive(true);
         }
-
+        _reloadImage.DOKill();
+        _reloadImage.gameObject.SetActive(false);
+        _reloadImage.fillAmount = 0.0f;
         _life = _lifeHearts.Length;
         _currentCorkCount = _CorkMagazineSize;
         _isReloading = false;
+        if (_reloadCoroutine != null)
+        {
+            StopCoroutine(_reloadCoroutine);
+            _reloadCoroutine = null;
+        }
     }
 
     public void LoseLife()
@@ -126,19 +132,32 @@ public class PlayerController : MonoBehaviour
         if (_isReloading) return;
         if (_currentCorkCount >= _CorkMagazineSize) return;
 
+        int reloadCount = _CorkMagazineSize - _currentCorkCount;
+        float reloadDuration = reloadCount * _reloadInterval;
+
+        _reloadImage.DOKill();
+        _reloadImage.fillAmount = 0.0f;
+        _reloadImage.gameObject.SetActive(true);
+
+        _reloadImage.DOFillAmount(1.0f, reloadDuration).SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                _reloadImage.gameObject.SetActive(false);
+            });
+
         _reloadCoroutine = StartCoroutine(Reload());
     }
 
     private IEnumerator Reload()
     {
         _isReloading = true;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(_reloadInterval);
 
         while (_currentCorkCount < _CorkMagazineSize)
         {
             int index = _currentCorkCount;
             PlayReloadCorkAnimation(index);
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(_reloadInterval);
             _currentCorkCount++;
         }
 
@@ -148,10 +167,19 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (InputManager.Instance.IsShootPressed)
+        if (!InputManager.Instance.IsShootPressed) return;
+
+        if (Input.touchCount > 0)
         {
-            Shoot(InputManager.Instance.PointerScreenPosition);
+            int fingerId = Input.GetTouch(0).fingerId;
+            if (EventSystem.current.IsPointerOverGameObject(fingerId)) return;
         }
+        else
+        {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+        }
+
+        Shoot(InputManager.Instance.PointerScreenPosition);
     }
 
     private void PlayLoseLifeAnimation(Image heart)
