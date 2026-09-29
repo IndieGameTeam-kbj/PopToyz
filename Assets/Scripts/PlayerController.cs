@@ -8,19 +8,17 @@ using DG.Tweening;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Image[] _lifeHearts;
-
-    [SerializeField] private int _CorkMagazineSize = 6;
     [SerializeField] private LayerMask _hitLayer;
     [SerializeField] private CorkPool _corkPool;
     [SerializeField] private Image[] _corkImages;
-
     [SerializeField] private Image _reloadImage;
-    [SerializeField] private float _reloadInterval = 0.2f;
 
     private int _life;
+    private int _corkMagazineSize = 6;
     private int _currentCorkCount;
     private bool _isReloading;
     private Coroutine _reloadCoroutine;
+    private float _reloadInterval = 0.2f;
 
     public static event Action LifeDepleted;
     public static event Action GameOverAnimationCompleted;
@@ -28,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _life = _lifeHearts.Length;
-        _currentCorkCount = _CorkMagazineSize;
+        _currentCorkCount = _corkMagazineSize;
         for (int i = 0; i < _corkImages.Length; i++)
         {
             _corkImages[i].gameObject.SetActive(true);
@@ -40,6 +38,11 @@ public class PlayerController : MonoBehaviour
 
     public void Reset()
     {
+        if (_reloadCoroutine != null)
+        {
+            StopCoroutine(_reloadCoroutine);
+            _reloadCoroutine = null;
+        }
 
         for (int i = 0; i < _lifeHearts.Length; i++)
         {
@@ -49,25 +52,24 @@ public class PlayerController : MonoBehaviour
             target.localRotation = Quaternion.identity;
             _lifeHearts[i].gameObject.SetActive(true);
         }
+
         for (int i = 0; i < _corkImages.Length; i++)
         {
             Transform target = _corkImages[i].transform;
             target.DOKill();
             target.localScale = Vector3.one;
             target.localPosition = _corkImages[i].rectTransform.anchoredPosition;
+            target.localRotation = Quaternion.identity;
             _corkImages[i].gameObject.SetActive(true);
         }
+
         _reloadImage.DOKill();
         _reloadImage.gameObject.SetActive(false);
         _reloadImage.fillAmount = 0.0f;
+
         _life = _lifeHearts.Length;
-        _currentCorkCount = _CorkMagazineSize;
+        _currentCorkCount = _corkMagazineSize;
         _isReloading = false;
-        if (_reloadCoroutine != null)
-        {
-            StopCoroutine(_reloadCoroutine);
-            _reloadCoroutine = null;
-        }
     }
 
     public void LoseLife()
@@ -130,9 +132,9 @@ public class PlayerController : MonoBehaviour
     private void StartReload()
     {
         if (_isReloading) return;
-        if (_currentCorkCount >= _CorkMagazineSize) return;
+        if (_currentCorkCount >= _corkMagazineSize) return;
 
-        int reloadCount = _CorkMagazineSize - _currentCorkCount;
+        int reloadCount = _corkMagazineSize - _currentCorkCount;
         float reloadDuration = reloadCount * _reloadInterval;
 
         _reloadImage.DOKill();
@@ -153,7 +155,7 @@ public class PlayerController : MonoBehaviour
         _isReloading = true;
         yield return new WaitForSeconds(_reloadInterval);
 
-        while (_currentCorkCount < _CorkMagazineSize)
+        while (_currentCorkCount < _corkMagazineSize)
         {
             int index = _currentCorkCount;
             PlayReloadCorkAnimation(index);
@@ -207,12 +209,15 @@ public class PlayerController : MonoBehaviour
         Image cork = _corkImages[index];
         Transform target = cork.transform;
         target.DOKill();
+        cork.DOKill();
+
         Vector3 startPosition = target.localPosition;
+        Vector3 recoilPosition = startPosition + Vector3.right * 60.0f;
 
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(target.DOScale(1.1f, 0.05f));
-        sequence.Join(target.DOLocalMoveX(startPosition.x + 100.0f, 0.2f).SetEase(Ease.OutQuad));
-        sequence.Join(target.DOLocalMoveY(startPosition.y - 30.0f, 0.2f).SetEase(Ease.InQuad));
+        sequence.Append(target.DOLocalMoveX(recoilPosition.x, 0.08f).SetEase(Ease.OutQuad));
+        sequence.Append(target.DOLocalMoveY(startPosition.y - 40.0f, 0.12f).SetEase(Ease.InQuad));
+        sequence.Join(cork.DOFade(0.0f, 0.12f));
         sequence.OnComplete(() =>
         {
             cork.gameObject.SetActive(false);
@@ -227,14 +232,19 @@ public class PlayerController : MonoBehaviour
         Image cork = _corkImages[index];
         Transform target = cork.transform;
         target.DOKill();
+        cork.DOKill();
+
         Vector3 targetPosition = target.localPosition;
         Vector3 startPosition = targetPosition + Vector3.right * 100.0f;
-        
         cork.gameObject.SetActive(true);
+        cork.DOFade(0.0f, 0.0f);
         target.localPosition = startPosition;
         target.localScale = Vector3.one;
         target.localRotation = Quaternion.identity;
-        target.DOLocalMove(targetPosition, 0.2f).SetEase(Ease.OutQuad);
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(target.DOLocalMove(targetPosition, 0.2f).SetEase(Ease.OutQuad));
+        sequence.Join(cork.DOFade(1.0f, 0.2f));
     }
 
     private void OnEnable()
