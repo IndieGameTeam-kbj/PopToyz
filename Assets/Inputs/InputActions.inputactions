@@ -1,0 +1,97 @@
+{
+    "version": 1,
+    "name": "InputActions",
+    "maps": [
+        {
+            "name": "Game",
+            "id": "04e9ef28-eed4-4c23-b806-09618c8a1fd4",
+            "actions": [
+                {
+                    "name": "Point",
+                    "type": "Value",
+                    "id": "6690c710-06cd-4889-849c-7bbe7a68e1ce",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "1512c992-f66a-4ac7-83cf-4f3f2348ae16",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "3b37180c-7908-43b1-89c0-2a727fa6d9fd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "19f7830e-0045-41a4-aa3a-521112523042",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "355ea93f-28ff-45f5-ace2-80778b14b685",
+                    "path": "<Touchscreen>/primaryTouch/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f1e64c7-afbe-46e1-be0d-57e5556da85c",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2437fac9-f4cd-4ceb-b7d4-22acd5c0a7a5",
+                    "path": "<AndroidGamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "68849879-9002-4a89-9995-94c1abd16dce",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

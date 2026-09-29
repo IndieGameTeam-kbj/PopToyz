@@ -39,4 +39,14 @@ public class Target : MonoBehaviour
         _rigidbody.angularVelocity = Vector3.zero;
     }
 
+    public void Hit(Vector3 hitPoint, Vector3 hitDirection)
+    {
+        _state = TargetState.Hit;
+
+        _rigidbody.linearVelocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+
+        _rigidbody.AddForceAtPosition(hitDirection * 5.0f, hitPoint, ForceMode.Impulse);
+    }
+
 }

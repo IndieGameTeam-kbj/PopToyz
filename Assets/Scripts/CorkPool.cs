@@ -13,30 +13,25 @@ public class CorkPool : MonoBehaviour
         for (int i = 0; i < _poolSize; i++)
         {
             Cork cork = Instantiate(_corkPrefab, transform);
-
-            cork.Init(this);
+            cork.Init();
             cork.gameObject.SetActive(false);
-
             _pool.Enqueue(cork);
         }
     }
 
     public Cork Get()
     {
-        if (_pool.Count == 0)
-            return null;
+        if (_pool.Count == 0) return null;
 
         Cork cork = _pool.Dequeue();
-
         cork.gameObject.SetActive(true);
-
         return cork;
     }
 
     public void Return(Cork cork)
     {
         cork.gameObject.SetActive(false);
-
         _pool.Enqueue(cork);
     }
+
 }
