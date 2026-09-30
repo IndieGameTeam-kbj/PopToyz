@@ -151,10 +151,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 796000732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1031}
-  m_SizeDelta: {x: 1000, y: 300}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 1092}
+  m_SizeDelta: {x: -100, y: 300}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &18508096
 MonoBehaviour:
@@ -203,7 +203,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 81.4
+  m_fontSize: 79.8
   m_fontSizeBase: 130
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7283444281dd448a2c96f82e542903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-  _logoAnimation: {fileID: 1224835190}
+  _logo: {fileID: 1224835189}
 --- !u!1 &94159621
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,11 +3402,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef1078be1285b749aa8351eb8f7ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ViewManager
-  _mainMenu: {fileID: 30448729}
-  _gameUI: {fileID: 796000731}
-  _pausePopup: {fileID: 1623434818}
-  _gameOverPopup: {fileID: 213227895}
+  _mainMenu: {fileID: 30448731}
+  _gameView: {fileID: 796000731}
   _dimBackground: {fileID: 1653736658}
+  _pausePopup: {fileID: 1623434820}
+  _gameOverPopup: {fileID: 213227897}
 --- !u!1 &1208448608
 GameObject:
   m_ObjectHideFlags: 0
@@ -3493,7 +3493,6 @@ GameObject:
   - component: {fileID: 1224835189}
   - component: {fileID: 1224835192}
   - component: {fileID: 1224835191}
-  - component: {fileID: 1224835190}
   m_Layer: 5
   m_Name: Logo
   m_TagString: Untagged
@@ -3520,19 +3519,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -372}
   m_SizeDelta: {x: 1100, y: 400}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &1224835190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1224835188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 409e0ab624213d1488f3cd2f1673427b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LogoAnimationController
-  _logo: {fileID: 1224835189}
 --- !u!114 &1224835191
 MonoBehaviour:
   m_ObjectHideFlags: 0
