@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool _isReloading;
     private Coroutine _reloadCoroutine;
     private float _reloadInterval = 0.2f;
+    private Vector3[] _corkPositions;
 
     public static event Action LifeDepleted;
     public static event Action GameOverAnimationCompleted;
@@ -27,11 +28,15 @@ public class PlayerController : MonoBehaviour
     {
         _life = _lifeHearts.Length;
         _currentCorkCount = _corkMagazineSize;
+        _corkPositions = new Vector3[_corkImages.Length];
+
         for (int i = 0; i < _corkImages.Length; i++)
         {
+            _corkPositions[i] = _corkImages[i].transform.localPosition;
             _corkImages[i].gameObject.SetActive(true);
             _corkImages[i].transform.localScale = Vector3.one;
         }
+
         _reloadImage.gameObject.SetActive(false);
         _reloadImage.fillAmount = 0.0f;
     }
@@ -48,6 +53,7 @@ public class PlayerController : MonoBehaviour
         {
             Transform target = _lifeHearts[i].transform;
             target.DOKill();
+            _lifeHearts[i].DOKill();
             target.localScale = Vector3.one;
             target.localRotation = Quaternion.identity;
             _lifeHearts[i].gameObject.SetActive(true);
@@ -57,8 +63,11 @@ public class PlayerController : MonoBehaviour
         {
             Transform target = _corkImages[i].transform;
             target.DOKill();
+            _corkImages[i].DOKill();
+            target.localPosition = _corkPositions[i];
             target.localScale = Vector3.one;
             target.localRotation = Quaternion.identity;
+            _corkImages[i].color = new Color(_corkImages[i].color.r, _corkImages[i].color.g, _corkImages[i].color.b, 1.0f);
             _corkImages[i].gameObject.SetActive(true);
         }
 
@@ -189,6 +198,7 @@ public class PlayerController : MonoBehaviour
         target.DOKill();
 
         Sequence sequence = DOTween.Sequence();
+        sequence.SetTarget(target);
         sequence.Append(target.DOScale(1.15f, 0.1f));
         sequence.Append(target.DOShakeRotation(0.2f, new Vector3(0.0f, 0.0f, 15.0f), 10, 90.0f));
         sequence.Append(target.DOScale(0.0f, 0.15f).SetEase(Ease.InBack));
@@ -242,6 +252,7 @@ public class PlayerController : MonoBehaviour
         target.localRotation = Quaternion.identity;
 
         Sequence sequence = DOTween.Sequence();
+        sequence.SetTarget(target);
         sequence.Append(target.DOLocalMove(targetPosition, 0.2f).SetEase(Ease.OutQuad));
         sequence.Join(cork.DOFade(1.0f, 0.2f));
     }
