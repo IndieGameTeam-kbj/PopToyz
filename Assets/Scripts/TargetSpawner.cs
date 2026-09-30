@@ -24,16 +24,6 @@ public class TargetSpawner : MonoBehaviour
         if (_camera == null) _camera = Camera.main;
     }
 
-    private void Start()
-    {
-        GameManager.GameRestarted += Reset;
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.GameRestarted -= Reset;
-    }
-
     public void Reset()
     {
         _time = 0.0f;
@@ -108,6 +98,16 @@ public class TargetSpawner : MonoBehaviour
             Spawn();
             _time = 0.0f;
         }
+    }
+
+    private void OnEnable()
+    {
+        GameManager.GameRestarted += Reset;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.GameRestarted -= Reset;
     }
 
 }

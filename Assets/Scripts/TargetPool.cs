@@ -8,14 +8,15 @@ public class TargetPool : MonoBehaviour
     private Dictionary<Target, Queue<Target>> _pools = new();
     private Dictionary<Target, Target> _targetOwners = new();
 
-    private void Start()
+    public void Reset()
     {
-        GameManager.GameRestarted += Reset;
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.GameRestarted -= Reset;
+        foreach (Target target in _targetOwners.Keys)
+        {
+            if (target.gameObject.activeSelf)
+            {
+                Return(target);
+            }
+        }
     }
 
     public Target Get()
@@ -54,15 +55,14 @@ public class TargetPool : MonoBehaviour
         _pools[prefab].Enqueue(target);
     }
 
-    public void Reset()
+    private void OnEnable()
     {
-        foreach (Target target in _targetOwners.Keys)
-        {
-            if (target.gameObject.activeSelf)
-            {
-                Return(target);
-            }
-        }
+        GameManager.GameRestarted += Reset;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.GameRestarted -= Reset;
     }
 
 }
