@@ -19,6 +19,19 @@ public class CorkPool : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        Cork[] corks = GetComponentsInChildren<Cork>(true);
+
+        foreach (Cork cork in corks)
+        {
+            if (cork.gameObject.activeSelf)
+            {
+                Return(cork);
+            }
+        }
+    }
+
     public Cork Get()
     {
         if (_pool.Count == 0) return null;
@@ -32,6 +45,16 @@ public class CorkPool : MonoBehaviour
     {
         cork.gameObject.SetActive(false);
         _pool.Enqueue(cork);
+    }
+
+    private void OnEnable()
+    {
+        GameManager.GameReset += Reset;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.GameReset -= Reset;
     }
 
 }
