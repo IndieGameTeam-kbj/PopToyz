@@ -102,12 +102,12 @@ public class TargetSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.GameRestarted += Reset;
+        GameManager.GameReset += Reset;
     }
 
     private void OnDisable()
     {
-        GameManager.GameRestarted -= Reset;
+        GameManager.GameReset -= Reset;
     }
 
 }

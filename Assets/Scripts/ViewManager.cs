@@ -8,8 +8,7 @@ public class ViewManager : MonoBehaviour
     [SerializeField] private GameObject _gameUI;
     [SerializeField] private GameObject _pausePopup;
     [SerializeField] private GameObject _gameOverPopup;
-
-    [SerializeField] private LogoAnimationController _logoAnimation;
+    [SerializeField] private GameObject _dimBackground;
     private void Awake()
     {
         Instance = this;
@@ -21,8 +20,7 @@ public class ViewManager : MonoBehaviour
         _gameUI.SetActive(false);
         _pausePopup.SetActive(false);
         _gameOverPopup.SetActive(false);
-
-        _logoAnimation.Play();
+        _dimBackground.SetActive(false);
     }
 
     public void ShowGame()
@@ -31,20 +29,24 @@ public class ViewManager : MonoBehaviour
         _gameUI.SetActive(true);
         _pausePopup.SetActive(false);
         _gameOverPopup.SetActive(false);
+        _dimBackground.SetActive(false);
     }
 
     public void ShowPause()
     {
         _pausePopup.SetActive(true);
+        _dimBackground.SetActive(true);
     }
 
     public void HidePause()
     {
         _pausePopup.SetActive(false);
+        _dimBackground.SetActive(false);
     }
 
     public void ShowGameOver()
     {
         _gameOverPopup.SetActive(true);
+        _dimBackground.SetActive(true);
     }
 }

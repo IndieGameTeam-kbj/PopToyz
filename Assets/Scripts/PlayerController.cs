@@ -260,13 +260,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         ReturnFloor.TargetMissed += LoseLife;
-        GameManager.GameRestarted += Reset;
+        GameManager.GameReset += Reset;
     }
 
     private void OnDisable()
     {
         ReturnFloor.TargetMissed -= LoseLife;
-        GameManager.GameRestarted -= Reset;
+        GameManager.GameReset -= Reset; 
     }
 
 }

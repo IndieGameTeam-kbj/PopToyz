@@ -11,7 +11,7 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
-    public static event Action GameRestarted;
+    public static event Action GameReset;
     public static GameManager Instance { get; private set; }
     public GameState State { get; private set; }
 
@@ -54,8 +54,7 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1f;
-
-        GameRestarted?.Invoke();
+        GameReset?.Invoke();
 
         State = GameState.Playing;
         ViewManager.Instance.ShowGame();
@@ -72,6 +71,8 @@ public class GameManager : MonoBehaviour
     public void GoMainMenu()
     {
         Time.timeScale = 1f;
+        GameReset?.Invoke();
+
         State = GameState.MainMenu;
 
         ViewManager.Instance.ShowMainMenu();

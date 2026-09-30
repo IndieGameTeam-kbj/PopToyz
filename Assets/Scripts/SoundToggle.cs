@@ -9,6 +9,15 @@ public class SoundToggle : MonoBehaviour
 
     private bool _isMuted;
 
+    private void OnEnable()
+    {
+        _isMuted = AudioListener.volume == 0f;
+
+        _soundImage.sprite = _isMuted
+            ? _soundOffSprite
+            : _soundOnSprite;
+    }
+
     public void ToggleSound()
     {
         _isMuted = !_isMuted;
