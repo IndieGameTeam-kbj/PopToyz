@@ -178,6 +178,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.State != GameState.Playing) return;
         if (!InputManager.Instance.IsShootPressed) return;
 
         if (Input.touchCount > 0)
