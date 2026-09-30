@@ -1,52 +1,58 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ViewManager : MonoBehaviour
 {
-    public static ViewManager Instance { get; private set; }
-    [SerializeField] private GameObject _mainMenu;
-    [SerializeField] private GameObject _gameUI;
-    [SerializeField] private GameObject _pausePopup;
-    [SerializeField] private GameObject _gameOverPopup;
+    [SerializeField] private MainMenuController _mainMenu;
+    [SerializeField] private GameObject _gameView;
     [SerializeField] private GameObject _dimBackground;
+    [SerializeField] private PausePopup _pausePopup;
+    [SerializeField] private GameoverPopup _gameOverPopup;
+
+    public static ViewManager Instance { get; private set; }
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
     }
 
     public void ShowMainMenu()
     {
-        _mainMenu.SetActive(true);
-        _gameUI.SetActive(false);
-        _pausePopup.SetActive(false);
-        _gameOverPopup.SetActive(false);
+        _mainMenu.gameObject.SetActive(true);
+        _gameView.SetActive(false);
+        _pausePopup.gameObject.SetActive(false);
+        _gameOverPopup.gameObject.SetActive(false);
         _dimBackground.SetActive(false);
     }
 
     public void ShowGame()
     {
-        _mainMenu.SetActive(false);
-        _gameUI.SetActive(true);
-        _pausePopup.SetActive(false);
-        _gameOverPopup.SetActive(false);
+        _mainMenu.gameObject.SetActive(false);
+        _gameView.SetActive(true);
+        _pausePopup.gameObject.SetActive(false);
+        _gameOverPopup.gameObject.SetActive(false);
         _dimBackground.SetActive(false);
     }
 
     public void ShowPause()
     {
-        _pausePopup.SetActive(true);
+        _pausePopup.gameObject.SetActive(true);
         _dimBackground.SetActive(true);
     }
 
     public void HidePause()
     {
-        _pausePopup.SetActive(false);
+        _pausePopup.gameObject.SetActive(false);
         _dimBackground.SetActive(false);
     }
 
     public void ShowGameOver()
     {
-        _gameOverPopup.SetActive(true);
+        _gameOverPopup.gameObject.SetActive(true);
         _dimBackground.SetActive(true);
     }
+
 }

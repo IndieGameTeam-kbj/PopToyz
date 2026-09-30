@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static ScoreManager Instance { get; private set; }
-
     [Header("Score UI")]
     [SerializeField] private TMP_Text _scoreText;
     [SerializeField] private TMP_Text _mainBestScoreText;
@@ -14,21 +12,17 @@ public class ScoreManager : MonoBehaviour
     private int _score;
     private int _bestScore;
 
+    public static ScoreManager Instance { get; private set; }
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
 
         UpdateUI();
-    }
-
-    private void OnEnable()
-    {
-        GameManager.GameReset += ResetScore;
-    }
-
-    private void OnDisable()
-    {
-        GameManager.GameReset -= ResetScore;
     }
 
     public void AddScore(int amount)
@@ -58,4 +52,15 @@ public class ScoreManager : MonoBehaviour
         _gameOverScoreText.text = _score.ToString();
         _gameOverBestScoreText.text = _bestScore.ToString();
     }
+
+    private void OnEnable()
+    {
+        GameManager.GameReset += ResetScore;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.GameReset -= ResetScore;
+    }
+
 }
