@@ -25,64 +25,70 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
 
-        State = GameState.MainMenu;
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
+        int targetWidth = 1080;
+        int targetHeight = (int)(((float)Screen.height / Screen.width) * targetWidth);
+        Screen.SetResolution(targetWidth, targetHeight, true);
     }
 
     private void Start()
     {
-        Time.timeScale = 1f;
+        GoMainMenu();
+    }
+
+    public void GoMainMenu()
+    {
+        State = GameState.MainMenu;
+        Time.timeScale = 1.0f;
         ViewManager.Instance.ShowMainMenu();
-        PlayerController.GameOverAnimationCompleted += GameOver;
     }
 
     public void StartGame()
     {
         State = GameState.Playing;
-        Time.timeScale = 1f;
-
+        Time.timeScale = 1.0f;
+        GameReset?.Invoke();
         ViewManager.Instance.ShowGame();
     }
 
     public void PauseGame()
     {
         State = GameState.Paused;
-        Time.timeScale = 0f;
-
+        Time.timeScale = 0.0f;
         ViewManager.Instance.ShowPause();
     }
 
     public void ResumeGame()
     {
-        Time.timeScale = 1f;
         State = GameState.Playing;
-
+        Time.timeScale = 1.0f;
         ViewManager.Instance.HidePause();
     }
+
     public void RestartGame()
     {
-        Time.timeScale = 1f;
-        GameReset?.Invoke();
-
         State = GameState.Playing;
+        Time.timeScale = 1.0f;
+        GameReset?.Invoke();
         ViewManager.Instance.ShowGame();
     }
 
     public void GameOver()
     {
         State = GameState.GameOver;
-        Time.timeScale = 1f;
-
+        Time.timeScale = 1.0f;
         ViewManager.Instance.ShowGameOver();
     }
 
-    public void GoMainMenu()
+    private void OnEnable()
     {
-        Time.timeScale = 1f;
-        GameReset?.Invoke();
+        PlayerController.GameOverAnimationCompleted += GameOver;
+    }
 
-        State = GameState.MainMenu;
-
-        ViewManager.Instance.ShowMainMenu();
+    private void OnDisable()
+    {
+        PlayerController.GameOverAnimationCompleted -= GameOver;
     }
 
 }
