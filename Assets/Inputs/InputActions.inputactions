@@ -22,7 +22,7 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Back",
@@ -49,7 +49,7 @@
                 {
                     "name": "",
                     "id": "355ea93f-28ff-45f5-ace2-80778b14b685",
-                    "path": "<Touchscreen>/primaryTouch/tap",
+                    "path": "<Touchscreen>/primaryTouch/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -82,7 +82,18 @@
                 {
                     "name": "",
                     "id": "68849879-9002-4a89-9995-94c1abd16dce",
-                    "path": "<Pointer>/position",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "630997f8-0ea7-45e7-aab0-a8b9180b6a8d",
+                    "path": "<Touchscreen>/primaryTouch/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -8,8 +8,6 @@ public class InputManager : MonoBehaviour
     private InputAction _shootAction;
     private InputAction _backAction;
 
-    public Vector2 PointerScreenPosition => _pointAction.ReadValue<Vector2>();
-    public bool IsShootPressed => _shootAction.WasPressedThisFrame();
     public bool IsBackPressed => _backAction.WasPressedThisFrame();
 
     public static InputManager Instance { get; private set; }
@@ -26,6 +24,18 @@ public class InputManager : MonoBehaviour
         _pointAction = _inputActions.Game.Point;
         _shootAction = _inputActions.Game.Shoot;
         _backAction = _inputActions.Game.Back;
+    }
+
+    public bool TryGetShootPosition(out Vector2 screenPosition)
+    {
+        if (!_shootAction.WasPressedThisFrame())
+        {
+            screenPosition = default;
+            return false;
+        }
+
+        screenPosition = _pointAction.ReadValue<Vector2>();
+        return true;
     }
 
     private void OnEnable()

@@ -154,4 +154,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6063889f933c2f7429b1e128111d0ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Target
-  _hitColor: {r: 0, g: 0, b: 0, a: 1}

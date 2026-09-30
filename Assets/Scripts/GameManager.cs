@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
         }
 
         State = GameState.MainMenu;
-        Time.timeScale = 1.0f;
+        Time.timeScale = 0.0f;
         _countdownText.gameObject.SetActive(false);
         ViewManager.Instance.ShowMainMenu();
     }
@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1.0f;
         GameReset?.Invoke();
         ViewManager.Instance.ShowGame();
-
         _countdownCoroutine = StartCoroutine(Countdown());
     }
 
@@ -86,7 +85,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1.0f;
         GameReset?.Invoke();
         ViewManager.Instance.ShowGame();
-
         _countdownCoroutine = StartCoroutine(Countdown());
     }
 
@@ -99,7 +97,14 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
-        State = GameState.Playing;
+        if (_countdownCoroutine != null)
+        {
+            State = GameState.Countdown;
+        }
+        else
+        {
+            State = GameState.Playing;
+        }
         Time.timeScale = 1.0f;
         ViewManager.Instance.HidePause();
     }
@@ -107,7 +112,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         State = GameState.GameOver;
-        Time.timeScale = 1.0f;
+        Time.timeScale = 0.0f;
         ViewManager.Instance.ShowGameOver();
         ScoreManager.Instance.PlayGameOverScoreAnimation();
     }

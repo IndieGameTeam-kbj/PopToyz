@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private Coroutine _reloadCoroutine;
     private float _reloadInterval = 0.2f;
     private Vector3[] _corkPositions;
+    private Sequence[] _corkSequences;
 
     public static event Action LifeDepleted;
     public static event Action GameOverAnimationCompleted;
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
         _life = _lifeHearts.Length;
         _currentCorkCount = _corkMagazineSize;
         _corkPositions = new Vector3[_corkImages.Length];
+        _corkSequences = new Sequence[_corkImages.Length];
 
         for (int i = 0; i < _corkImages.Length; i++)
         {
@@ -61,12 +64,14 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < _corkImages.Length; i++)
         {
+            _corkSequences[i]?.Kill();
+            _corkSequences[i] = null;
+            
             Transform target = _corkImages[i].transform;
-            target.DOKill();
-            _corkImages[i].DOKill();
             target.localPosition = _corkPositions[i];
             target.localScale = Vector3.one;
             target.localRotation = Quaternion.identity;
+            _corkImages[i].DOKill();
             _corkImages[i].color = new Color(_corkImages[i].color.r, _corkImages[i].color.g, _corkImages[i].color.b, 1.0f);
             _corkImages[i].gameObject.SetActive(true);
         }
@@ -128,7 +133,7 @@ public class PlayerController : MonoBehaviour
 
         if (layer == LayerMask.NameToLayer("Target"))
         {
-            Target target = hit.collider.GetComponentInParent<Target>();
+            Target target = hit.collider.GetComponent<Target>();
 
             if (target != null && target.State == TargetState.Idle)
             {
@@ -149,7 +154,6 @@ public class PlayerController : MonoBehaviour
         _reloadImage.DOKill();
         _reloadImage.fillAmount = 0.0f;
         _reloadImage.gameObject.SetActive(true);
-
         _reloadImage.DOFillAmount(1.0f, reloadDuration).SetEase(Ease.Linear)
             .OnComplete(() =>
             {
@@ -179,19 +183,23 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (GameManager.Instance.State != GameState.Playing) return;
-        if (!InputManager.Instance.IsShootPressed) return;
+        if (!InputManager.Instance.TryGetShootPosition(out Vector2 screenPosition)) return;
+        if (IsPointerOverUIElement(screenPosition)) return;
 
-        if (Input.touchCount > 0)
-        {
-            int fingerId = Input.GetTouch(0).fingerId;
-            if (EventSystem.current.IsPointerOverGameObject(fingerId)) return;
-        }
-        else
-        {
-            if (EventSystem.current.IsPointerOverGameObject()) return;
-        }
+        Shoot(screenPosition);
+    }
 
-        Shoot(InputManager.Instance.PointerScreenPosition);
+    private bool IsPointerOverUIElement(Vector2 touchPosition)
+    {
+        if (EventSystem.current == null) return false;
+
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = touchPosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        return results.Count > 0;
     }
 
     private void PlayLoseLifeAnimation(Image heart)
@@ -219,18 +227,22 @@ public class PlayerController : MonoBehaviour
     {
         Image cork = _corkImages[index];
         Transform target = cork.transform;
-        target.DOKill();
-        cork.DOKill();
 
-        Vector3 startPosition = target.localPosition;
+        _corkSequences[index]?.Kill();
+        _corkSequences[index] = null;
+
+        Vector3 startPosition = _corkPositions[index];
         Vector3 recoilPosition = startPosition + Vector3.right * 60.0f;
 
         Sequence sequence = DOTween.Sequence();
+        _corkSequences[index] = sequence;
+
         sequence.Append(target.DOLocalMoveX(recoilPosition.x, 0.08f).SetEase(Ease.OutQuad));
         sequence.Append(target.DOLocalMoveY(startPosition.y - 40.0f, 0.12f).SetEase(Ease.InQuad));
         sequence.Join(cork.DOFade(0.0f, 0.12f));
         sequence.OnComplete(() =>
         {
+            _corkSequences[index] = null;
             cork.gameObject.SetActive(false);
             target.localPosition = startPosition;
             target.localRotation = Quaternion.identity;
@@ -242,21 +254,28 @@ public class PlayerController : MonoBehaviour
     {
         Image cork = _corkImages[index];
         Transform target = cork.transform;
-        target.DOKill();
-        cork.DOKill();
 
-        Vector3 targetPosition = target.localPosition;
+        _corkSequences[index]?.Kill();
+        _corkSequences[index] = null;
+
+        Vector3 targetPosition = _corkPositions[index];
         Vector3 startPosition = targetPosition + Vector3.right * 100.0f;
+
         cork.gameObject.SetActive(true);
         cork.DOFade(0.0f, 0.0f);
+
         target.localPosition = startPosition;
         target.localScale = Vector3.one;
         target.localRotation = Quaternion.identity;
 
         Sequence sequence = DOTween.Sequence();
-        sequence.SetTarget(target);
+        _corkSequences[index] = sequence;
         sequence.Append(target.DOLocalMove(targetPosition, 0.2f).SetEase(Ease.OutQuad));
         sequence.Join(cork.DOFade(1.0f, 0.2f));
+        sequence.OnComplete(() =>
+        {
+            _corkSequences[index] = null;
+        });
     }
 
     private void OnEnable()
