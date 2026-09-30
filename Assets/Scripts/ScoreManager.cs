@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -35,6 +36,7 @@ public class ScoreManager : MonoBehaviour
         }
 
         UpdateUI();
+        PlayScoreAnimation();
     }
 
     public void ResetScore()
@@ -63,4 +65,34 @@ public class ScoreManager : MonoBehaviour
         GameManager.GameReset -= ResetScore;
     }
 
+    private void PlayScoreAnimation()
+    {
+        Transform target = _scoreText.transform;
+
+        target.DOKill();
+        target.localScale = Vector3.one;
+
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Append(target.DOScale(1.2f, 0.1f));
+        sequence.Append(target.DOScale(1f, 0.1f));
+    }
+
+    public void PlayGameOverScoreAnimation()
+    {
+        int displayScore = 0;
+
+        _gameOverScoreText.text = "0";
+
+        DOTween.To(
+            () => displayScore,
+            value =>
+            {
+                displayScore = value;
+                _gameOverScoreText.text = displayScore.ToString();
+            },
+            _score,
+            0.8f
+        );
+    }
 }

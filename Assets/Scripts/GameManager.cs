@@ -109,6 +109,7 @@ public class GameManager : MonoBehaviour
         State = GameState.GameOver;
         Time.timeScale = 1.0f;
         ViewManager.Instance.ShowGameOver();
+        ScoreManager.Instance.PlayGameOverScoreAnimation();
     }
 
     private IEnumerator Countdown()
