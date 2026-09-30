@@ -133,6 +133,7 @@ public class PlayerController : MonoBehaviour
             if (target != null && target.State == TargetState.Idle)
             {
                 target.Hit(hit.point, ray.direction);
+                ScoreManager.Instance.AddScore(1);
             }
         }
     }
