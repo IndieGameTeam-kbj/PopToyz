@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     private float _countdownDuration = 0.5f;
     private Coroutine _countdownCoroutine;
-
     private bool _isTransitioning;
 
     public GameState State { get; private set; }
@@ -52,24 +51,16 @@ public class GameManager : MonoBehaviour
 
     public void GoMainMenu()
     {
-        if (_isTransitioning)
-            return;
+        if (_isTransitioning) return;
 
+        StopCountdown();
         _isTransitioning = true;
 
         ViewManager.Instance.Transition(
             () =>
             {
-                if (_countdownCoroutine != null)
-                {
-                    StopCoroutine(_countdownCoroutine);
-                    _countdownCoroutine = null;
-                }
-
                 State = GameState.MainMenu;
                 Time.timeScale = 0.0f;
-
-                _countdownText.gameObject.SetActive(false);
                 ViewManager.Instance.ShowMainMenu();
             },
             () =>
@@ -81,9 +72,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        if (_isTransitioning)
-            return;
+        if (_isTransitioning) return;
 
+        StopCountdown();
         _isTransitioning = true;
 
         ViewManager.Instance.Transition(
@@ -91,7 +82,6 @@ public class GameManager : MonoBehaviour
             {
                 State = GameState.Countdown;
                 Time.timeScale = 1.0f;
-
                 GameReset?.Invoke();
                 ViewManager.Instance.ShowGame();
             },
@@ -137,6 +127,21 @@ public class GameManager : MonoBehaviour
         ScoreManager.Instance.PlayGameOverScoreAnimation();
     }
 
+    private void StopCountdown()
+    {
+        if (_countdownCoroutine != null)
+        {
+            StopCoroutine(_countdownCoroutine);
+            _countdownCoroutine = null;
+        }
+
+        Transform target = _countdownText.transform;
+        target.DOKill();
+        target.localScale = Vector3.one;
+        _countdownText.text = string.Empty;
+        _countdownText.gameObject.SetActive(false);
+    }
+
     private IEnumerator Countdown()
     {
         _countdownText.gameObject.SetActive(true);
@@ -172,20 +177,9 @@ public class GameManager : MonoBehaviour
         sequence.Append(target.DOScale(1.0f, 0.1f).SetEase(Ease.OutQuad));
     }
 
-    private void OnEnable()
-    {
-        PlayerController.GameOverAnimationCompleted += GameOver;
-    }
-
-    private void OnDisable()
-    {
-        PlayerController.GameOverAnimationCompleted -= GameOver;
-    }
-
     private void Update()
     {
-        if (!InputManager.Instance.IsBackPressed)
-            return;
+        if (!InputManager.Instance.IsBackPressed) return;
 
         switch (State)
         {
@@ -194,6 +188,9 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Countdown:
+                PauseGame();
+                break;
+
             case GameState.Playing:
                 PauseGame();
                 break;
@@ -207,4 +204,15 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    private void OnEnable()
+    {
+        PlayerController.GameOverAnimationCompleted += GameOver;
+    }
+
+    private void OnDisable()
+    {
+        PlayerController.GameOverAnimationCompleted -= GameOver;
+    }
+
 }

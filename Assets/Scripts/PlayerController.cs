@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
         }
 
         PlayLoseLifeAnimation(_lifeHearts[index]);
+        SoundManager.Instance.Play(SoundType.LoseLife);
     }
 
     private void Shoot(Vector2 screenPosition)
@@ -110,6 +111,7 @@ public class PlayerController : MonoBehaviour
 
         Fire(screenPosition);
         PlayConsumeCorkAnimation(index);
+        SoundManager.Instance.Play(SoundType.Shoot);
 
         if (_currentCorkCount <= 0)
         {
@@ -172,6 +174,7 @@ public class PlayerController : MonoBehaviour
         {
             int index = _currentCorkCount;
             PlayReloadCorkAnimation(index);
+            SoundManager.Instance.Play(SoundType.Reload);
             yield return new WaitForSeconds(_reloadInterval);
             _currentCorkCount++;
         }

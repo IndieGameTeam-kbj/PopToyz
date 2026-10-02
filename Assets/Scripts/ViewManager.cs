@@ -3,7 +3,6 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class ViewManager : MonoBehaviour
 {
     [SerializeField] private MainMenuController _mainMenu;
@@ -52,11 +51,7 @@ public class ViewManager : MonoBehaviour
     {
         _pausePopup.gameObject.SetActive(true);
         _dimBackground.SetActive(true);
-
-        PlayPopupOpenAnimation(
-            _pausePopup.GetComponent<RectTransform>(),
-            null
-        );
+        PlayPopupOpenAnimation(_pausePopup.GetComponent<RectTransform>(), null);
     }
 
     public void HidePause()
@@ -69,18 +64,13 @@ public class ViewManager : MonoBehaviour
     {
         _gameOverPopup.gameObject.SetActive(true);
         _dimBackground.SetActive(true);
-
-        PlayPopupOpenAnimation(
-            _gameOverPopup.GetComponent<RectTransform>(),
-            null
-        );
+        PlayPopupOpenAnimation(_gameOverPopup.GetComponent<RectTransform>(), null);
     }
 
     public void Transition(Action onSwap, Action onComplete)
     {
         _screenTransition.DOKill();
         SetTransitionAlpha(0.0f);
-
 
         _screenTransition
             .DOFade(1.0f, _transitionDuration)
@@ -89,11 +79,7 @@ public class ViewManager : MonoBehaviour
             .OnComplete(() =>
             {
                 onSwap?.Invoke();
-
-                _screenTransition
-                    .DOFade(0.0f, _transitionDuration)
-                    .SetEase(Ease.InOutQuad)
-                    .SetUpdate(true)
+                _screenTransition.DOFade(0.0f, _transitionDuration).SetEase(Ease.InOutQuad).SetUpdate(true)
                     .OnComplete(() =>
                     {
                         onComplete?.Invoke();
@@ -104,13 +90,8 @@ public class ViewManager : MonoBehaviour
     private void PlayPopupOpenAnimation(RectTransform popup, Action onComplete)
     {
         popup.DOKill();
-
         popup.localScale = Vector3.one * _popupStartScale;
-
-        popup
-            .DOScale(Vector3.one, _popupDuration)
-            .SetEase(Ease.OutBack, 1.2f)
-            .SetUpdate(true)
+        popup.DOScale(Vector3.one, _popupDuration).SetEase(Ease.OutBack, 1.2f).SetUpdate(true)
             .OnComplete(() =>
             {
                 onComplete?.Invoke();

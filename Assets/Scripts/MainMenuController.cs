@@ -8,6 +8,7 @@ public class MainMenuController : MonoBehaviour
     public void OnClickPlay()
     {
         GameManager.Instance.StartGame();
+        SoundManager.Instance.Play(SoundType.ButtonClick);
     }
 
     public void PlayLogoAnimation()

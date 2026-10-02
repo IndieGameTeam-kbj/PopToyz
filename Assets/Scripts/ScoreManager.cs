@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    [Header("Score UI")]
     [SerializeField] private TMP_Text _scoreText;
     [SerializeField] private TMP_Text _mainBestScoreText;
     [SerializeField] private TMP_Text _gameOverScoreText;
@@ -13,7 +12,6 @@ public class ScoreManager : MonoBehaviour
 
     private int _score;
     private int _bestScore;
-
     private bool _isBest;
 
     public static ScoreManager Instance { get; private set; }
@@ -63,32 +61,18 @@ public class ScoreManager : MonoBehaviour
     private void UpdateUI()
     {
         _scoreText.text = _score.ToString();
-
         _mainBestScoreText.text = _bestScore.ToString();
-
         _gameOverScoreText.text = _score.ToString();
         _gameOverBestScoreText.text = _bestScore.ToString();
-    }
-
-    private void OnEnable()
-    {
-        GameManager.GameReset += ResetScore;
-    }
-
-    private void OnDisable()
-    {
-        GameManager.GameReset -= ResetScore;
     }
 
     private void PlayScoreAnimation()
     {
         Transform target = _scoreText.transform;
-
         target.DOKill();
         target.localScale = Vector3.one;
-
+        
         Sequence sequence = DOTween.Sequence();
-
         sequence.Append(target.DOScale(1.2f, 0.1f));
         sequence.Append(target.DOScale(1f, 0.1f));
     }
@@ -115,13 +99,20 @@ public class ScoreManager : MonoBehaviour
     private void PlayBestAnimation()
     {
         Transform target = _bestImage.transform;
-
         _bestImage.SetActive(true);
-
         target.DOKill();
         target.localScale = Vector3.zero;
-
-        target.DOScale(1.0f, 0.2f)
-            .SetEase(Ease.OutBack);
+        target.DOScale(1.0f, 0.2f).SetEase(Ease.OutBack);
     }
+
+    private void OnEnable()
+    {
+        GameManager.GameReset += ResetScore;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.GameReset -= ResetScore;
+    }
+
 }
