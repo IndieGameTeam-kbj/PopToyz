@@ -9,9 +9,12 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TMP_Text _mainBestScoreText;
     [SerializeField] private TMP_Text _gameOverScoreText;
     [SerializeField] private TMP_Text _gameOverBestScoreText;
+    [SerializeField] private GameObject _bestImage;
 
     private int _score;
     private int _bestScore;
+
+    private bool _isBest;
 
     public static ScoreManager Instance { get; private set; }
     private void Awake()
@@ -23,6 +26,7 @@ public class ScoreManager : MonoBehaviour
         }
         Instance = this;
 
+        _bestImage.SetActive(false);
         UpdateUI();
     }
 
@@ -33,6 +37,15 @@ public class ScoreManager : MonoBehaviour
         if (_score > _bestScore)
         {
             _bestScore = _score;
+
+            if (!_bestImage.activeSelf)
+            {
+                if (!_isBest)
+                {
+                    _isBest = true;
+                    PlayBestAnimation();
+                }
+            }
         }
 
         UpdateUI();
@@ -42,6 +55,8 @@ public class ScoreManager : MonoBehaviour
     public void ResetScore()
     {
         _score = 0;
+        _isBest = false;
+        _bestImage.SetActive(false);
         UpdateUI();
     }
 
@@ -93,6 +108,20 @@ public class ScoreManager : MonoBehaviour
             },
             _score,
             0.8f
-        );
+        )
+        .SetUpdate(true);
+    }
+
+    private void PlayBestAnimation()
+    {
+        Transform target = _bestImage.transform;
+
+        _bestImage.SetActive(true);
+
+        target.DOKill();
+        target.localScale = Vector3.zero;
+
+        target.DOScale(1.0f, 0.2f)
+            .SetEase(Ease.OutBack);
     }
 }

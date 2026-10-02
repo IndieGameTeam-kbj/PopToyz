@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     private float _countdownDuration = 0.5f;
     private Coroutine _countdownCoroutine;
 
+    private bool _isTransitioning;
+
     public GameState State { get; private set; }
 
     public static event Action GameReset;
@@ -50,42 +52,60 @@ public class GameManager : MonoBehaviour
 
     public void GoMainMenu()
     {
-        if (_countdownCoroutine != null)
-        {
-            StopCoroutine(_countdownCoroutine);
-            _countdownCoroutine = null;
-        }
+        if (_isTransitioning)
+            return;
 
-        State = GameState.MainMenu;
-        Time.timeScale = 0.0f;
-        _countdownText.gameObject.SetActive(false);
-        ViewManager.Instance.ShowMainMenu();
+        _isTransitioning = true;
+
+        ViewManager.Instance.Transition(
+            () =>
+            {
+                if (_countdownCoroutine != null)
+                {
+                    StopCoroutine(_countdownCoroutine);
+                    _countdownCoroutine = null;
+                }
+
+                State = GameState.MainMenu;
+                Time.timeScale = 0.0f;
+
+                _countdownText.gameObject.SetActive(false);
+                ViewManager.Instance.ShowMainMenu();
+            },
+            () =>
+            {
+                _isTransitioning = false;
+            }
+        );
     }
 
     public void StartGame()
     {
-        if (_countdownCoroutine != null) return;
+        if (_isTransitioning)
+            return;
 
-        State = GameState.Countdown;
-        Time.timeScale = 1.0f;
-        GameReset?.Invoke();
-        ViewManager.Instance.ShowGame();
-        _countdownCoroutine = StartCoroutine(Countdown());
+        _isTransitioning = true;
+
+        ViewManager.Instance.Transition(
+            () =>
+            {
+                State = GameState.Countdown;
+                Time.timeScale = 1.0f;
+
+                GameReset?.Invoke();
+                ViewManager.Instance.ShowGame();
+            },
+            () =>
+            {
+                _countdownCoroutine = StartCoroutine(Countdown());
+                _isTransitioning = false;
+            }
+        );
     }
 
     public void RestartGame()
     {
-        if (_countdownCoroutine != null)
-        {
-            StopCoroutine(_countdownCoroutine);
-            _countdownCoroutine = null;
-        }
-
-        State = GameState.Countdown;
-        Time.timeScale = 1.0f;
-        GameReset?.Invoke();
-        ViewManager.Instance.ShowGame();
-        _countdownCoroutine = StartCoroutine(Countdown());
+        StartGame();
     }
 
     public void PauseGame()
@@ -162,4 +182,29 @@ public class GameManager : MonoBehaviour
         PlayerController.GameOverAnimationCompleted -= GameOver;
     }
 
+    private void Update()
+    {
+        if (!InputManager.Instance.IsBackPressed)
+            return;
+
+        switch (State)
+        {
+            case GameState.MainMenu:
+                Application.Quit();
+                break;
+
+            case GameState.Countdown:
+            case GameState.Playing:
+                PauseGame();
+                break;
+
+            case GameState.Paused:
+                ResumeGame();
+                break;
+
+            case GameState.GameOver:
+                GoMainMenu();
+                break;
+        }
+    }
 }
