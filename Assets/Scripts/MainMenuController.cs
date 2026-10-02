@@ -1,5 +1,6 @@
-using DG.Tweening;
+using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -13,13 +14,22 @@ public class MainMenuController : MonoBehaviour
 
     public void PlayLogoAnimation()
     {
+        _logo.DOKill();
         _logo.localScale = Vector3.one;
 
-        _logo.DOScale(1.15f, 0.2f).SetEase(Ease.OutQuad)
-            .OnComplete(() =>
-            {
-                _logo.DOScale(1f, 0.25f).SetEase(Ease.OutBack);
-            });
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetTarget(_logo);
+        sequence.SetUpdate(true);
+        sequence.Append(_logo.DOScale(1.15f, 0.2f).SetEase(Ease.OutQuad));
+        sequence.Append(_logo.DOScale(1.0f, 0.25f).SetEase(Ease.OutBack));
+
+        StartCoroutine(PlayLogoSoundNextFrame());
+    }
+
+    private IEnumerator PlayLogoSoundNextFrame()
+    {
+        yield return null;
+        SoundManager.Instance.Play(SoundType.Logo);
     }
 
     private void OnEnable()

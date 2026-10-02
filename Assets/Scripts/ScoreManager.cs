@@ -14,6 +14,8 @@ public class ScoreManager : MonoBehaviour
     private int _bestScore;
     private bool _isBest;
 
+    public int Score => _score;
+
     public static ScoreManager Instance { get; private set; }
     private void Awake()
     {
@@ -24,6 +26,14 @@ public class ScoreManager : MonoBehaviour
         }
         Instance = this;
 
+        _bestImage.SetActive(false);
+        UpdateUI();
+    }
+
+    public void Reset()
+    {
+        _score = 0;
+        _isBest = false;
         _bestImage.SetActive(false);
         UpdateUI();
     }
@@ -42,20 +52,13 @@ public class ScoreManager : MonoBehaviour
                 {
                     _isBest = true;
                     PlayBestAnimation();
+                    SoundManager.Instance.Play(SoundType.BestScore);
                 }
             }
         }
 
         UpdateUI();
         PlayScoreAnimation();
-    }
-
-    public void ResetScore()
-    {
-        _score = 0;
-        _isBest = false;
-        _bestImage.SetActive(false);
-        UpdateUI();
     }
 
     private void UpdateUI()
@@ -77,25 +80,6 @@ public class ScoreManager : MonoBehaviour
         sequence.Append(target.DOScale(1f, 0.1f));
     }
 
-    public void PlayGameOverScoreAnimation()
-    {
-        int displayScore = 0;
-
-        _gameOverScoreText.text = "0";
-
-        DOTween.To(
-            () => displayScore,
-            value =>
-            {
-                displayScore = value;
-                _gameOverScoreText.text = displayScore.ToString();
-            },
-            _score,
-            0.8f
-        )
-        .SetUpdate(true);
-    }
-
     private void PlayBestAnimation()
     {
         Transform target = _bestImage.transform;
@@ -107,12 +91,12 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.GameReset += ResetScore;
+        GameManager.GameReset += Reset;
     }
 
     private void OnDisable()
     {
-        GameManager.GameReset -= ResetScore;
+        GameManager.GameReset -= Reset;
     }
 
 }

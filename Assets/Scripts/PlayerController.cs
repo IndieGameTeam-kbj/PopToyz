@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     private Vector3[] _corkPositions;
     private Sequence[] _corkSequences;
 
-    public static event Action LifeDepleted;
+    public static event Action GameOver;
     public static event Action GameOverAnimationCompleted;
 
     private void Awake()
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
         if (_life == 0)
         {
-            LifeDepleted?.Invoke();
+            GameOver?.Invoke();
         }
 
         PlayLoseLifeAnimation(_lifeHearts[index]);

@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _countdownText;
 
-    private float _countdownDuration = 0.5f;
+    private float _countdownDuration = 0.8f;
     private Coroutine _countdownCoroutine;
     private bool _isTransitioning;
 
@@ -122,9 +122,13 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         State = GameState.GameOver;
+        SoundManager.Instance.Play(SoundType.GameOver);
+    }
+
+    private void ShowGameOverPopup()
+    {
         Time.timeScale = 0.0f;
         ViewManager.Instance.ShowGameOver();
-        ScoreManager.Instance.PlayGameOverScoreAnimation();
     }
 
     private void StopCountdown()
@@ -147,15 +151,19 @@ public class GameManager : MonoBehaviour
         _countdownText.gameObject.SetActive(true);
 
         PlayCountdownAnimation("3");
+        SoundManager.Instance.Play(SoundType.Countdown);
         yield return new WaitForSeconds(_countdownDuration);
 
         PlayCountdownAnimation("2");
+        SoundManager.Instance.Play(SoundType.Countdown);
         yield return new WaitForSeconds(_countdownDuration);
 
         PlayCountdownAnimation("1");
+        SoundManager.Instance.Play(SoundType.Countdown);
         yield return new WaitForSeconds(_countdownDuration);
 
         PlayCountdownAnimation("Start!");
+        SoundManager.Instance.Play(SoundType.GameStart);
         yield return new WaitForSeconds(_countdownDuration);
 
         _countdownText.gameObject.SetActive(false);
@@ -173,8 +181,8 @@ public class GameManager : MonoBehaviour
 
         Sequence sequence = DOTween.Sequence();
         sequence.SetTarget(target);
-        sequence.Append(target.DOScale(1.2f, 0.15f).SetEase(Ease.OutBack));
-        sequence.Append(target.DOScale(1.0f, 0.1f).SetEase(Ease.OutQuad));
+        sequence.Append(target.DOScale(1.2f, _countdownDuration * 0.375f).SetEase(Ease.OutBack));
+        sequence.Append(target.DOScale(1.0f, _countdownDuration * 0.125f).SetEase(Ease.OutQuad));
     }
 
     private void Update()
@@ -205,14 +213,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void OnClickPauseButton()
+    {
+        PauseGame();
+        SoundManager.Instance.Play(SoundType.ButtonClick);
+    }
+
     private void OnEnable()
     {
-        PlayerController.GameOverAnimationCompleted += GameOver;
+        PlayerController.GameOver += GameOver;
+        PlayerController.GameOverAnimationCompleted += ShowGameOverPopup;
     }
 
     private void OnDisable()
     {
-        PlayerController.GameOverAnimationCompleted -= GameOver;
+        PlayerController.GameOver -= GameOver;
+        PlayerController.GameOverAnimationCompleted -= ShowGameOverPopup;
     }
 
 }

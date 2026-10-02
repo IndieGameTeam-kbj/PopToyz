@@ -64,7 +64,7 @@ public class ViewManager : MonoBehaviour
     {
         _gameOverPopup.gameObject.SetActive(true);
         _dimBackground.SetActive(true);
-        PlayPopupOpenAnimation(_gameOverPopup.GetComponent<RectTransform>(), null);
+        PlayPopupOpenAnimation(_gameOverPopup.GetComponent<RectTransform>(), _gameOverPopup.PlayScoreAnimation);
     }
 
     public void Transition(Action onSwap, Action onComplete)

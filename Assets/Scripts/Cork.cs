@@ -29,6 +29,8 @@ public class Cork : MonoBehaviour
         Vector3 randomDirection = normal + tangent * Random.Range(-0.4f, 0.4f) + bitangent * Random.Range(-0.2f, 0.4f);
         _rigidbody.AddForce(randomDirection.normalized * _bounceForce, ForceMode.Impulse);
         _rigidbody.AddTorque(Random.insideUnitSphere * 2.0f, ForceMode.Impulse);
+
+        SoundManager.Instance.PlayAtPosition(SoundType.Hit, position);
     }
 
     public void ResetPhysics()
