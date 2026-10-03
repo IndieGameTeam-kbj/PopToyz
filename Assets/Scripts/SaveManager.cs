@@ -21,6 +21,8 @@ public class SaveManager : MonoBehaviour
         }
         Instance = this;
 
+        //PlayerPrefs.DeleteAll();
+        //PlayerPrefs.Save();
         Load();
     }
 
@@ -42,9 +44,6 @@ public class SaveManager : MonoBehaviour
 
     private void Load()
     {
-        //PlayerPrefs.DeleteAll();
-        //PlayerPrefs.Save();
-
         _isMuted = PlayerPrefs.GetInt(SoundMutedKey, 0) == 1;
         _bestScore = PlayerPrefs.GetInt(BestScoreKey, 0);
     }
