@@ -26,6 +26,7 @@ public class ScoreManager : MonoBehaviour
         }
         Instance = this;
 
+        _bestScore = SaveManager.Instance.BestScore;
         _bestImage.SetActive(false);
         UpdateUI();
     }
@@ -45,15 +46,13 @@ public class ScoreManager : MonoBehaviour
         if (_score > _bestScore)
         {
             _bestScore = _score;
+            SaveManager.Instance.SetBestScore(_bestScore);
 
-            if (!_bestImage.activeSelf)
+            if (!_isBest)
             {
-                if (!_isBest)
-                {
-                    _isBest = true;
-                    PlayBestAnimation();
-                    SoundManager.Instance.Play(SoundType.BestScore);
-                }
+                _isBest = true;
+                PlayBestAnimation();
+                SoundManager.Instance.Play(SoundType.BestScore);
             }
         }
 

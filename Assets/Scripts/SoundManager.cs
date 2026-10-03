@@ -74,6 +74,8 @@ public class SoundManager : MonoBehaviour
 
     public void Play(SoundType soundType)
     {
+        if (SaveManager.Instance.IsMuted) return;
+
         AudioClip clip = GetClip(soundType);
         if (clip == null) return;
 
@@ -85,6 +87,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlayAtPosition(SoundType soundType, Vector3 position)
     {
+        if (SaveManager.Instance.IsMuted) return;
         if (_3dSources == null || _3dSources.Length == 0) return;
 
         AudioClip clip = GetClip(soundType);

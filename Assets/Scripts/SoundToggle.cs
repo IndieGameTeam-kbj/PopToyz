@@ -12,14 +12,14 @@ public class SoundToggle : MonoBehaviour
     public void ToggleSound()
     {
         _isMuted = !_isMuted;
-        AudioListener.volume = _isMuted ? 0.0f : 1.0f;
+        SaveManager.Instance.SetSoundMuted(_isMuted);
         _soundImage.sprite = _isMuted ? _soundOffSprite : _soundOnSprite;
         SoundManager.Instance.Play(SoundType.ButtonClick);
     }
 
     private void OnEnable()
     {
-        _isMuted = AudioListener.volume == 0.0f;
+        _isMuted = SaveManager.Instance.IsMuted;
         _soundImage.sprite = _isMuted ? _soundOffSprite : _soundOnSprite;
     }
 
